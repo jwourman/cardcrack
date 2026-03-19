@@ -22,14 +22,18 @@ import type { Deck } from "@/types";
 import { formatCents, getCategoryGradient, getCategoryIcon } from "@/lib/utils";
 
 async function getFeaturedDecks(): Promise<Deck[]> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("decks")
-    .select("*")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false })
-    .limit(6);
-  return data ?? [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("decks")
+      .select("*")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(6);
+    return data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function HomePage() {
